@@ -9,9 +9,15 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(bodyParser.json());
 
+app.use(express.json());
+
 let users = [];
 
 app.get("/", function(req, res){
+    res.sendFile(path.join(__dirname,'views','invitation.html'));
+});
+
+app.get("/i", function(req, res){
     res.sendFile(path.join(__dirname,'views','index.html'));
 });
 
@@ -28,13 +34,27 @@ app.post('/update-location', (req, res) => {
     } else {
         users.push({ userId, latitude, longitude, lastUpdated: new Date() });
     }
-
     res.sendStatus(200);
 });
 
 // Endpoint pro získání seznamu uživatelů
 app.get('/users', (req, res) => {
     res.json(users);
+});
+
+// In-memory storage for invitations
+let invitations = [];
+
+// Route to handle form submissions
+app.post('/invite', (req, res) => {
+    const { username, email } = req.body;
+    invitations.push({ username, email });
+    res.status(201).json({ message: 'Invitation added successfully' });
+});
+
+// Route to get all invitations
+app.get('/invitations', (req, res) => {
+    res.json(invitations);
 });
 
 // Spuštění serveru
