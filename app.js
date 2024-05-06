@@ -12,18 +12,24 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 let users = [];
+let events = [];
+let invitations = [];
 
 app.get("/", function(req, res){
     res.sendFile(path.join(__dirname,'views','invitation.html'));
 });
 
-app.get("/i", function(req, res){
+app.get("/map", function(req, res){
     res.sendFile(path.join(__dirname,'views','index.html'));
+    let invitationsCopy = [...invitations];
+    const event = { id: this.id, invitations: invitationsCopy }
+    events.push(event);
+    invitations = [];
 });
 
 // Endpoint pro aktualizaci polohy uživatele
 app.post('/update-location', (req, res) => {
-    const { userId, latitude, longitude } = req.body;
+    const { userId: userId, latitude: latitude, longitude: longitude } = req.body;
 
     // Aktualizace polohy uživatele nebo přidání nového uživatele
     const userIndex = users.findIndex(user => user.userId === userId);
@@ -42,12 +48,9 @@ app.get('/users', (req, res) => {
     res.json(users);
 });
 
-// In-memory storage for invitations
-let invitations = [];
-
 // Route to handle form submissions
 app.post('/invite', (req, res) => {
-    const { username, email } = req.body;
+    const { username: username, email: email } = req.body;
     invitations.push({ username, email });
     res.status(201).json({ message: 'Invitation added successfully' });
 });
