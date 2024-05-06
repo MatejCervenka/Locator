@@ -2,7 +2,7 @@ document.getElementById('invitation-form').addEventListener('submit', async (eve
     event.preventDefault();
     const formData = new FormData(event.target);
     const username = formData.get('username');
-    const email = formData.get('email');
+    const code = formData.get('code');
 
     try {
         const response = await fetch('/invite', {
@@ -10,7 +10,7 @@ document.getElementById('invitation-form').addEventListener('submit', async (eve
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ username, email })
+            body: JSON.stringify({ username: username, code: code })
         });
         if (!response.ok) {
             throw new Error('Failed to add invitation');
@@ -31,25 +31,20 @@ async function renderInvitations() {
             throw new Error('Failed to fetch invitations');
         }
         const invitations = await response.json();
-        //const users = await response.json();
         const invitationList = document.getElementById('invitation-list');
-        //const usersList = document.getElementById('userList');
         invitationList.innerHTML = '';
-        //let lastActive = new Date();
-        //usersList.innerHTML = '';
         invitations.forEach(invitation => {
             const listItem = document.createElement('li');
-            listItem.innerHTML = `<span>${invitation.username}</span> - ${invitation.email}`;
+            listItem.innerHTML = `<span>${invitation.username}</span> - ${invitation.code}`;
             invitationList.appendChild(listItem);
         });
-        /*users.forEach(user => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<span>${user.username}</span> - ${lastActive}`;
-            usersList.appendChild(listItem);
-        });*/
     } catch (error) {
         console.error(error.message);
     }
+}
+
+function getUsers() {
+
 }
 
 renderInvitations();

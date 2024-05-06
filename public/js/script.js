@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Simulovaná data uživatelů
+    /*// Simulovaná data uživatelů
     let users = [
         { id: 1, name: "John", latitude: 40.7128, longitude: -74.0060, lastActive: new Date() },
         { id: 2, name: "Alice", latitude: 34.0522, longitude: -118.2437, lastActive: new Date() },
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Aktualizace zobrazení uživatelů
         displayUserList();
         displayUsersOnMap();
-    });
+    });*/
 
     // Inicializace mapy
     var map = L.map('map').setView([0, 0], 10);
@@ -62,18 +62,21 @@ document.addEventListener("DOMContentLoaded", function() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    const liveButton = document.getElementById("liveButton");
+    liveButton.addEventListener("click", function() {
     // Prompt user for geolocation
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var latlng = [position.coords.latitude, position.coords.longitude];
-            map.setView(latlng, 13); // Set map view to user's location
-            L.marker(latlng).addTo(map) // Add marker at user's location
-                .bindPopup('Ahoj! Jsem zde.')
-                .openPopup();
-        });
-    } else {
-        alert("Geolocation is not supported by your browser");
-    }
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var latlng = [position.coords.latitude, position.coords.longitude];
+                map.setView(latlng, 13); // Set map view to user's location
+                L.marker(latlng).addTo(map) // Add marker at user's location
+                    .bindPopup('Ahoj! Jsem zde.')
+                    .openPopup();
+            });
+        } else {
+            alert("Geolocation is not supported by your browser");
+        }
+    });
 
     // Zobrazení uživatelů po načtení stránky
     displayUserList();
